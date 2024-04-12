@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div>
+        <h1 class="title">HOGWARTS HOUSES</h1>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="col-md-3 gryf-house">
+            <button class="gryf-btn" id="gryf" onclick={PrintHouseDetails(gId,grfImg)}>GRYFFINDOR</button>
+            <p>press the button</p>
+
+        </div>
+        <div class="col-md-3 huf-house">
+            <button class="huf-btn" id="huf" onclick={PrintHouseDetails(hId,hufImg)}>Hufflepuffs</button>
+
+            <p>press the button</p>
+        </div>
+        <div class="col-md-3 sly-house">
+            <button class="sly-btn" id="sly" onclick={PrintHouseDetails(sId,slyImg)}>Slytherin</button>
+            <p>press the button</p>
+        </div>
+        <div class="col-md-3 rav-house">
+            <button class="rav-btn" id="rav" onclick={PrintHouseDetails(rId,ravImg)}>Ravenclaw</button>
+            <p>press the button</p>
+        </div>
+    </div>
+    <div>
+        <p class="para">
+        <ul class="list"></ul>
+        </p>
+    </div>
+    <script>
+        var grfImg = "https://www.dropbox.com/scl/fi/z5zlsqo0oxiluxvkh1fe9/gryf.png?rlkey=vrh94wekhpot85rgisxl8aws3&dl=0&raw=1";
+        var slyImg = "https://www.dropbox.com/scl/fi/0djud4uhw8jugd6tod8f3/slyth.jpg?rlkey=2if1l215q9o7nunicaacgo65v&dl=0&raw=1";
+        var hufImg = "https://www.dropbox.com/scl/fi/360iww3tfr76vn7ob0td0/huf.jpg?rlkey=fwgnie9oyk7vvu3r7jod5mjga&dl=0&raw=1";
+        var ravImg = "https://www.dropbox.com/scl/fi/fzm96kqrfavec14jzsxxo/raven.jpg?rlkey=y4foa932hl6hb1044agj7hbqv&dl=0&raw=1";
+        var gId = "0367baf3-1cb6-4baf-bede-48e17e1cd005";
+        var hId = "85af6295-fd01-4170-a10b-963dd51dce14";
+        var sId = "a9704c47-f92e-40a4-8771-ed1899c9b9c1";
+        var rId = "805fd37a-65ae-4fe5-b336-d767b8b7c73a";
+
+        const PrintHouseName = () => {
+            fetch("https://wizard-world-api.herokuapp.com/Houses")
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById('gryf').textContent = data[0].name;
+                    var gId = data[0].id;
+                    document.getElementById('rav').textContent = data[1].name;
+                    var rId = data[1].id;
+                    document.getElementById('huf').textContent = data[2].name;
+                    var hId = data[2].id;
+                    document.getElementById('sly').textContent = data[3].name;
+                    var sId = data[3].id;
+                })
+                .catch((error) => console.log("Error fetching data:", error));
+        };
+        PrintHouseName();
+        const PrintHouseDetails = (id, imageUrl) => {
+            fetch(`https://wizard-world-api.herokuapp.com/Houses/${id}`)
+                .then((response) => response.json())
+                .then((data) => {
+
+
+                    let img = document.createElement('img');
+                    img.setAttribute('src', imageUrl);
+                    img.setAttribute('alt', "loading image");
+                    let p = document.querySelector('.para')
+                    p.innerHTML = '';
+                    p.appendChild(img);
+
+                    //  createElement method
+                    let li = document.createElement('li');
+                    li.textContent = "House Color:" + data.houseColours;
+
+                    let li1 = document.createElement('li');
+                    li1.textContent = "Founder:" + data.founder;
+                    let li2 = document.createElement('li');
+                    li2.textContent = "Animal:" + data.animal;
+
+                    let li3 = document.createElement('li');
+                    li3.textContent = "Ghost:" + data.ghost;
+
+                    let li4 = document.createElement('li');
+                    li4.textContent = "Common room:" + data.commonRoom;
+
+                    let li0 = document.createElement('li');
+                    li0.textContent = "Name:" + data.name;
+
+                    // set the text content of the li element
+                    let ul = document.querySelector('.list');
+                    ul.innerHTML = '';
+                    // append li to the ul with class 'list'
+                    ul.appendChild(li1);
+                    ul.appendChild(li2);
+                    ul.appendChild(li3);
+                    ul.appendChild(li4);
+                    ul.appendChild(li0);
+
+                })
+                .catch((error) => console.log("Error fetching data:", error));
+        };
+    </script>
+</body>
+
+</html>
